@@ -1,4 +1,5 @@
 {
   "name": "Nova Travel Ecosystem (NTE)",
-  "description": "A comprehensive digital ecosystem presentation for a futuristic travel, AI, and XR platform."
+  "description": "A comprehensive digital ecosystem presentation for a futuristic travel, AI, and XR platform.",
+  "requestFramePermissions": []
 }
