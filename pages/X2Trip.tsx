@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Layers, Truck, Wind, Move, Navigation, Cpu, Eye, Info } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Layers, Truck, Wind, Move, Navigation, Cpu, Eye, Info, Box, Activity, Shield } from 'lucide-react';
 
 const X2Trip: React.FC = () => {
   // 3D Viewer State
-  const [rotation, setRotation] = useState({ x: -15, y: 45 });
+  const [rotation, setRotation] = useState({ x: -15, y: 35 });
+  const [activeModel, setActiveModel] = useState<'container' | 'treadmill' | 'foam'>('container');
   const [isDragging, setIsDragging] = useState(false);
   const lastMousePos = useRef({ x: 0, y: 0 });
 
@@ -23,7 +24,7 @@ const X2Trip: React.FC = () => {
     const deltaY = clientY - lastMousePos.current.y;
 
     setRotation({
-      x: rotation.x - deltaY * 0.5,
+      x: Math.max(-90, Math.min(90, rotation.x - deltaY * 0.5)),
       y: rotation.y + deltaX * 0.5
     });
 
@@ -38,157 +39,218 @@ const X2Trip: React.FC = () => {
     <div className="min-h-screen bg-nova-900 pt-20 overflow-x-hidden" onMouseUp={handleMouseUp} onTouchEnd={handleMouseUp}>
       
       {/* Header Section */}
-      <section className="relative py-20 px-4">
+      <section className="relative py-16 px-4">
         <div className="max-w-7xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-nova-accent/10 text-nova-accent px-6 py-2 rounded-full border border-nova-accent/30 mb-6 animate-pulse">
                 <Layers size={20} />
                 <span className="font-bold tracking-wider">تقنية X2 TRIP الحصرية</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
                 رحلتان في <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">وقت واحد</span>
             </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                لماذا تضيع الوقت في الطريق؟ مع كونتنر Nova X2، جسدك يسافر إلى الأهرامات، وعقلك وحواسك في جولة داخل مكتبة الإسكندرية.
+            <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+                استغلال وقت الانتقال الميت. جسدك يسافر إلى الأهرامات، وعقلك في جولة افتراضية كاملة.
             </p>
         </div>
       </section>
 
       {/* The 3D Interactive Container Section */}
-      <section className="py-12 bg-gradient-to-b from-nova-900 to-black relative">
-        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-3 gap-12 items-center">
+      <section className="py-8 bg-gradient-to-b from-nova-900 to-black relative">
+        <div className="max-w-7xl mx-auto px-4">
             
-            {/* Left: Description */}
-            <div className="space-y-6 order-2 lg:order-1">
-                <h3 className="text-3xl font-bold text-white border-r-4 border-nova-accent pr-4">هيكل الكونتنر الذكي</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                    حاوية متنقلة معزولة تماماً عن الخارج. يتم تركيبها على شاسيه شاحنات نقل سياحي خاصة. 
-                    الكونتنر مصمم ليصبح "بوابة زمنية ومكانية" مفصولة عن حركة السيارة الفعلية بفضل أنظمة التثبيت الهيدروليكي.
-                </p>
-                
-                <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                    <h4 className="text-white font-bold mb-2 flex items-center gap-2"><Truck size={18}/> الحركة الفيزيائية</h4>
-                    <p className="text-xs text-gray-400">السيارة تتحرك بسرعة 100 كم/س تجاه الجيزة.</p>
-                </div>
-                <div className="bg-nova-500/10 p-4 rounded-xl border border-nova-500/30">
-                    <h4 className="text-nova-accent font-bold mb-2 flex items-center gap-2"><Eye size={18}/> الرحلة الافتراضية</h4>
-                    <p className="text-xs text-gray-300">أنت تمشي فعلياً داخل قاعات الفاتيكان أو مكتبة الإسكندرية.</p>
-                </div>
+            {/* Control Panel */}
+            <div className="flex flex-wrap justify-center gap-4 mb-8">
+                <button 
+                    onClick={() => setActiveModel('container')}
+                    className={`px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all ${activeModel === 'container' ? 'bg-nova-500 text-white shadow-lg shadow-nova-500/30' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}
+                >
+                    <Box size={20} /> هيكل الكونتنر (خارجي)
+                </button>
+                <button 
+                    onClick={() => setActiveModel('treadmill')}
+                    className={`px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all ${activeModel === 'treadmill' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}
+                >
+                    <Activity size={20} /> المشاية الذكية (داخلي)
+                </button>
+                <button 
+                    onClick={() => setActiveModel('foam')}
+                    className={`px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all ${activeModel === 'foam' ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/30' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}
+                >
+                    <Shield size={20} /> العزل والحماية
+                </button>
             </div>
 
-            {/* Center: The 3D Viewer */}
-            <div className="lg:col-span-2 h-[500px] relative order-1 lg:order-2 perspective-container cursor-grab active:cursor-grabbing bg-gray-900/50 rounded-3xl border border-white/10 overflow-hidden"
+            {/* 3D Viewer Canvas */}
+            <div className="w-full h-[500px] relative perspective-container cursor-grab active:cursor-grabbing bg-gray-900/50 rounded-3xl border border-white/10 overflow-hidden"
                  onMouseDown={handleMouseDown}
                  onMouseMove={handleMouseMove}
                  onTouchStart={handleMouseDown}
                  onTouchMove={handleMouseMove}
             >
                 <div className="absolute top-4 right-4 z-10 bg-black/60 px-3 py-1 rounded-full text-xs text-white flex items-center gap-2 pointer-events-none">
-                    <Move size={14} /> حرك الماوس لتدوير الكونتنر 360 درجة
+                    <Move size={14} /> حرك الماوس لتدوير المجسم 360 درجة
                 </div>
-
-                {/* The 3D Cube Scene */}
+                
+                {/* 3D Scene */}
                 <div className="w-full h-full flex items-center justify-center perspective-1000">
-                    <div className="relative w-64 h-64 md:w-80 md:h-80 preserve-3d transition-transform duration-75 ease-linear"
+                    <div className="relative preserve-3d transition-transform duration-75 ease-linear"
                          style={{ transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` }}>
                         
-                        {/* Faces of the Container */}
-                        {/* Front - Entrance */}
-                        <div className="absolute inset-0 bg-gray-800 border-2 border-nova-500/50 backface-hidden opacity-90 flex items-center justify-center translate-z-40">
-                             <div className="text-center">
-                                <div className="text-6xl text-white/20 mb-2">NOVA</div>
-                                <div className="text-xs text-nova-accent border border-nova-accent px-2 py-1 rounded">B-01 المدخل</div>
-                             </div>
-                             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop')] bg-cover opacity-30 mix-blend-overlay"></div>
-                        </div>
+                        {/* ---------------- CONTAINER MODEL ---------------- */}
+                        {activeModel === 'container' && (
+                            <div className="relative preserve-3d">
+                                {/* Long Box Dimensions: 300px width, 100px height, 100px depth */}
+                                {/* Front */}
+                                <div className="absolute w-[300px] h-[120px] bg-gradient-to-br from-green-800 to-green-900 border border-green-600 flex items-center justify-center backface-hidden" style={{ transform: 'translateZ(60px)' }}>
+                                    <div className="text-white/20 font-black text-4xl tracking-widest">NOVA CONTAINER</div>
+                                    <div className="absolute bottom-2 left-2 text-[8px] text-white border border-white px-1">20' STD</div>
+                                    {/* Door Details */}
+                                    <div className="absolute right-4 top-0 bottom-0 w-1 bg-black/30"></div>
+                                    <div className="absolute right-8 top-0 bottom-0 w-1 bg-black/30"></div>
+                                    <div className="absolute right-6 top-1/2 w-4 h-2 bg-gray-300 rounded"></div>
+                                </div>
+                                {/* Back */}
+                                <div className="absolute w-[300px] h-[120px] bg-green-900 border border-green-700 backface-hidden" style={{ transform: 'rotateY(180deg) translateZ(60px)' }}></div>
+                                {/* Right */}
+                                <div className="absolute w-[120px] h-[120px] bg-green-800 border border-green-600 backface-hidden flex items-center justify-center" style={{ transform: 'rotateY(90deg) translateZ(150px)' }}>
+                                    <div className="border-4 border-dashed border-yellow-500/50 w-20 h-20 rounded-full flex items-center justify-center">
+                                        <Wind size={24} className="text-white/50" />
+                                    </div>
+                                </div>
+                                {/* Left */}
+                                <div className="absolute w-[120px] h-[120px] bg-green-800 border border-green-600 backface-hidden flex items-center justify-center" style={{ transform: 'rotateY(-90deg) translateZ(150px)' }}>
+                                    <div className="w-16 h-24 bg-black/40 border border-gray-500"></div> {/* Door */}
+                                </div>
+                                {/* Top */}
+                                <div className="absolute w-[300px] h-[120px] bg-green-700 border border-green-500 backface-hidden" style={{ transform: 'rotateX(90deg) translateZ(60px)' }}>
+                                    <div className="w-full h-full bg-[repeating-linear-gradient(90deg,transparent,transparent_19px,#00000020_20px)]"></div>
+                                </div>
+                                {/* Bottom */}
+                                <div className="absolute w-[300px] h-[120px] bg-black border border-gray-800 backface-hidden" style={{ transform: 'rotateX(-90deg) translateZ(60px)' }}></div>
+                            </div>
+                        )}
 
-                        {/* Back - Tech Unit */}
-                        <div className="absolute inset-0 bg-gray-900 border-2 border-purple-500/50 backface-hidden opacity-90 flex items-center justify-center -translate-z-40 rotate-y-180">
-                            <div className="absolute top-2 left-2 w-full h-full p-4">
-                                <div className="w-full h-full border-2 border-dashed border-gray-600 rounded flex flex-col items-center justify-center">
-                                    <Cpu size={48} className="text-purple-500 mb-2 animate-pulse"/>
-                                    <span className="text-white font-bold">وحدة المعالجة المركزية</span>
+                        {/* ---------------- TREADMILL MODEL ---------------- */}
+                        {activeModel === 'treadmill' && (
+                            <div className="relative preserve-3d">
+                                {/* Base */}
+                                <div className="absolute w-[200px] h-[300px] bg-gray-800 border border-gray-600 backface-hidden" style={{ transform: 'rotateX(90deg) translateZ(0px)' }}>
+                                    {/* Belt */}
+                                    <div className="absolute inset-4 bg-black border border-gray-700 flex flex-col gap-2 overflow-hidden opacity-80">
+                                        <div className="w-full h-1 bg-gray-800"></div>
+                                        <div className="w-full h-1 bg-gray-800"></div>
+                                        <div className="w-full h-1 bg-gray-800"></div>
+                                        <div className="w-full h-1 bg-gray-800"></div>
+                                        <div className="w-full h-1 bg-gray-800"></div>
+                                        <div className="w-full h-1 bg-gray-800"></div>
+                                        <div className="w-full h-1 bg-gray-800"></div>
+                                    </div>
+                                </div>
+                                {/* Front Console Post Left */}
+                                <div className="absolute w-[10px] h-[150px] bg-gray-700 backface-hidden" style={{ transform: 'translateZ(95px) translateX(-90px) translateY(-75px)' }}></div>
+                                <div className="absolute w-[10px] h-[150px] bg-gray-700 backface-hidden" style={{ transform: 'rotateY(90deg) translateZ(90px) translateX(95px) translateY(-75px)' }}></div>
+                                {/* Front Console Post Right */}
+                                <div className="absolute w-[10px] h-[150px] bg-gray-700 backface-hidden" style={{ transform: 'translateZ(95px) translateX(90px) translateY(-75px)' }}></div>
+                                <div className="absolute w-[10px] h-[150px] bg-gray-700 backface-hidden" style={{ transform: 'rotateY(90deg) translateZ(-90px) translateX(95px) translateY(-75px)' }}></div>
+                                
+                                {/* Console Screen */}
+                                <div className="absolute w-[200px] h-[80px] bg-gray-900 border-2 border-blue-500 backface-hidden flex items-center justify-center" style={{ transform: 'translateZ(100px) translateY(-150px) rotateX(-20deg)' }}>
+                                    <div className="bg-blue-900/50 w-[90%] h-[80%] flex items-center justify-center">
+                                        <span className="text-blue-300 text-xs animate-pulse">Running Simulation...</span>
+                                    </div>
+                                </div>
+                                <div className="absolute w-[200px] h-[80px] bg-gray-800 backface-hidden" style={{ transform: 'translateZ(95px) translateY(-150px) rotateX(-20deg) rotateY(180deg)' }}></div>
+                            </div>
+                        )}
+
+                        {/* ---------------- FOAM MODEL ---------------- */}
+                        {activeModel === 'foam' && (
+                            <div className="relative preserve-3d">
+                                {/* Wall Panel */}
+                                <div className="absolute w-[200px] h-[200px] bg-gray-900 backface-hidden" style={{ transform: 'translateZ(10px)' }}>
+                                    {/* Pyramids Grid using CSS Gradients to simulate depth */}
+                                    <div className="w-full h-full grid grid-cols-6 grid-rows-6">
+                                        {[...Array(36)].map((_, i) => (
+                                            <div key={i} className="bg-gray-800 border border-black transform scale-75 shadow-inner">
+                                                <div className="w-full h-full bg-gradient-to-br from-gray-700 to-black rounded-sm"></div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                {/* Thickness */}
+                                <div className="absolute w-[200px] h-[20px] bg-gray-800 backface-hidden" style={{ transform: 'rotateX(90deg) translateZ(10px)' }}></div>
+                                <div className="absolute w-[20px] h-[200px] bg-gray-800 backface-hidden" style={{ transform: 'rotateY(90deg) translateZ(190px)' }}></div>
+                                {/* Backing */}
+                                <div className="absolute w-[200px] h-[200px] bg-black backface-hidden" style={{ transform: 'rotateY(180deg) translateZ(10px)' }}>
+                                    <div className="flex items-center justify-center h-full">
+                                        <span className="text-gray-600 font-bold rotate-180">ISO LAYER</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
 
-                        {/* Right - Sensors */}
-                        <div className="absolute inset-0 bg-gray-800 border-2 border-blue-500/50 backface-hidden opacity-90 flex items-center justify-center rotate-y-90 translate-x-40">
-                             <div className="grid grid-cols-2 gap-2 p-4 w-full">
-                                <div className="bg-black/50 p-2 rounded text-center"><Wind size={20} className="mx-auto text-blue-400"/></div>
-                                <div className="bg-black/50 p-2 rounded text-center"><Navigation size={20} className="mx-auto text-green-400"/></div>
-                                <div className="bg-black/50 p-2 rounded text-center text-xs text-white col-span-2">Sensors Array</div>
-                             </div>
-                        </div>
-
-                        {/* Left - Haptics */}
-                        <div className="absolute inset-0 bg-gray-800 border-2 border-blue-500/50 backface-hidden opacity-90 flex items-center justify-center rotate-y-minus-90 translate-x-minus-40">
-                             <div className="text-center p-6">
-                                <h3 className="text-white font-bold text-xl">عزل صوتي تام</h3>
-                                <div className="w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent mt-2"></div>
-                             </div>
-                        </div>
-
-                        {/* Top - Roof */}
-                        <div className="absolute inset-0 bg-black border-2 border-gray-700 backface-hidden opacity-90 flex items-center justify-center rotate-x-90 translate-y-minus-40">
-                            <span className="text-gray-500 font-mono text-sm">NOVA SATELLITE LINK</span>
-                        </div>
-
-                        {/* Bottom - Platform */}
-                        <div className="absolute inset-0 bg-gray-900 border-2 border-gray-700 backface-hidden opacity-90 flex items-center justify-center rotate-x-minus-90 translate-y-40">
-                             <div className="text-center">
-                                <Move size={32} className="text-red-500 mx-auto"/>
-                                <span className="text-red-500 text-xs">Motion Platform Base</span>
-                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
+            <p className="text-center text-gray-500 mt-4 text-sm">
+                * نماذج ثلاثية الأبعاد تفاعلية تحاكي المكونات الحقيقية (حرك الماوس للمشاهدة)
+            </p>
         </div>
       </section>
 
-      {/* Equipment Detail Grid */}
+      {/* Image Gallery & Specs */}
       <section className="py-20 px-4 bg-nova-800/30">
         <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl font-bold text-center text-white mb-16">ماذا يوجد داخل الكونتنر؟</h2>
+            <h2 className="text-3xl font-bold text-center text-white mb-12">التفاصيل الفنية والتجهيزات</h2>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                {/* Item 1 */}
-                <div className="bg-nova-900 p-6 rounded-2xl border border-white/5 hover:border-nova-500 transition-all group">
-                    <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <Navigation size={32} className="text-blue-400" />
+            <div className="grid md:grid-cols-3 gap-8">
+                {/* 1. Container Specs */}
+                <div className="bg-white/5 p-4 rounded-2xl border border-white/10 group hover:border-nova-500 transition-all">
+                    <div className="aspect-video bg-black rounded-xl mb-4 overflow-hidden relative">
+                         {/* Placeholder for Container Image */}
+                         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-70 group-hover:scale-110 transition-transform duration-500"></div>
+                         <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-xs text-white">20ft Standard</div>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-3">مشاية Omni-Treadmill</h3>
-                    <p className="text-gray-400 text-sm">أرضية متحركة 360 درجة تسمح لك بالمشي والجري الفعلي داخل اللعبة دون أن تتحرك من مكانك في الكونتنر.</p>
+                    <h3 className="text-xl font-bold text-white mb-2">الكونتنر القياسي</h3>
+                    <ul className="text-gray-400 text-sm space-y-2 list-disc list-inside">
+                        <li>الطول: 6.06 متر (20 قدم)</li>
+                        <li>العرض: 2.44 متر</li>
+                        <li>الارتفاع: 2.59 متر</li>
+                        <li>المساحة الداخلية: ~14 متر مربع</li>
+                    </ul>
                 </div>
 
-                {/* Item 2 */}
-                <div className="bg-nova-900 p-6 rounded-2xl border border-white/5 hover:border-nova-500 transition-all group">
-                    <div className="w-16 h-16 bg-purple-500/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <Wind size={32} className="text-purple-400" />
+                {/* 2. Treadmill Specs */}
+                <div className="bg-white/5 p-4 rounded-2xl border border-white/10 group hover:border-blue-500 transition-all">
+                    <div className="aspect-video bg-black rounded-xl mb-4 overflow-hidden relative">
+                         {/* Placeholder for Treadmill Image */}
+                         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1576678927484-cc907957088c?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-70 group-hover:scale-110 transition-transform duration-500"></div>
+                         <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-xs text-white">Omni-Directional</div>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-3">4D Climate Core</h3>
-                    <p className="text-gray-400 text-sm">إذا كنت تزور القطب الشمالي افتراضياً، سيقوم الكونتنر بخفض الحرارة وإطلاق رياح باردة لتشعر بالواقعية.</p>
+                    <h3 className="text-xl font-bold text-white mb-2">المشاية الذكية</h3>
+                    <ul className="text-gray-400 text-sm space-y-2 list-disc list-inside">
+                        <li>حركة 360 درجة حرة</li>
+                        <li>مستشعرات ضغط للقدم</li>
+                        <li>حزام أمان معلق للحماية من السقوط</li>
+                        <li>شاشة تحكم لوحية مدمجة</li>
+                    </ul>
                 </div>
 
-                {/* Item 3 */}
-                <div className="bg-nova-900 p-6 rounded-2xl border border-white/5 hover:border-nova-500 transition-all group">
-                    <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <Truck size={32} className="text-green-400" />
+                {/* 3. Foam Specs */}
+                <div className="bg-white/5 p-4 rounded-2xl border border-white/10 group hover:border-purple-500 transition-all">
+                    <div className="aspect-video bg-black rounded-xl mb-4 overflow-hidden relative">
+                         {/* Placeholder for Foam Image */}
+                         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1519671609187-5735c34586d3?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-70 group-hover:scale-110 transition-transform duration-500"></div>
+                         <div className="absolute bottom-2 right-2 bg-black/70 px-2 py-1 rounded text-xs text-white">Acoustic Foam</div>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-3">نظام عزل الحركة</h3>
-                    <p className="text-gray-400 text-sm">قاعدة هيدروليكية تفصل اهتزازات السيارة في الطريق عن حركتك داخل الواقع الافتراضي لمنع الدوار.</p>
+                    <h3 className="text-xl font-bold text-white mb-2">العزل الصوتي</h3>
+                    <ul className="text-gray-400 text-sm space-y-2 list-disc list-inside">
+                        <li>ألواح فوم هرمية لامتصاص الصدى</li>
+                        <li>عزل ضوضاء الطريق الخارجية</li>
+                        <li>تبطين كامل للجدران والسقف</li>
+                        <li>لون فحمي داكن لتقليل انعكاس الضوء</li>
+                    </ul>
                 </div>
-
-                {/* Item 4 */}
-                <div className="bg-nova-900 p-6 rounded-2xl border border-white/5 hover:border-nova-500 transition-all group">
-                    <div className="w-16 h-16 bg-yellow-500/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <Info size={32} className="text-yellow-400" />
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-3">بدلة اللمس Haptics</h3>
-                    <p className="text-gray-400 text-sm">سترة وقفازات تنقل لك شعور اللمس، مثل ملمس جدران المعبد أو قطرات المطر الافتراضية.</p>
-                </div>
-
             </div>
         </div>
       </section>
@@ -244,32 +306,13 @@ const X2Trip: React.FC = () => {
       {/* Styles for 3D Cube */}
       <style>{`
         .perspective-container {
-            perspective: 1000px;
+            perspective: 1200px;
         }
         .preserve-3d {
             transform-style: preserve-3d;
         }
         .backface-hidden {
-            backface-visibility: hidden;
-        }
-        /* Custom translations to build the cube */
-        .translate-z-40 { transform: translateZ(10rem); }
-        .-translate-z-40 { transform: translateZ(-10rem); }
-        .translate-x-40 { transform: translateX(10rem); }
-        .translate-x-minus-40 { transform: translateX(-10rem); }
-        .translate-y-40 { transform: translateY(10rem); }
-        .translate-y-minus-40 { transform: translateY(-10rem); }
-        
-        .rotate-y-90 { transform: rotateY(90deg) translateZ(10rem); }
-        .rotate-y-minus-90 { transform: rotateY(-90deg) translateZ(10rem); }
-        .rotate-y-180 { transform: rotateY(180deg) translateZ(10rem); }
-        
-        .rotate-x-90 { transform: rotateX(90deg) translateZ(10rem); }
-        .rotate-x-minus-90 { transform: rotateX(-90deg) translateZ(10rem); }
-
-        @media (min-width: 768px) {
-             .translate-z-40 { transform: translateZ(10rem); } /* 160px half of 320px */
-            /* Adjusted for larger screens if cube size changes */
+            backface-visibility: hidden; /* Or visible if we want to see insides of single planes */
         }
       `}</style>
 

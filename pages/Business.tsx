@@ -6,24 +6,29 @@ import { TrendingUp, DollarSign, Calculator, RefreshCw } from 'lucide-react';
 const Business: React.FC = () => {
   // --- Editable State for Feasibility Study ---
   const [startupCosts, setStartupCosts] = useState([
-    { id: 1, name: 'تصميم وبرمجة الموقع والتطبيق', cost: 150000 },
-    { id: 2, name: 'تجهيز السيرفرات وقواعد البيانات', cost: 50000 },
-    { id: 3, name: 'تجهيز محتوى XR/VR الأولي', cost: 200000 },
-    { id: 4, name: 'تسويق وافتتاح', cost: 100000 },
+    { id: 1, name: 'شراء مقر الشركة (عقار تمليك)', cost: 2500000 },
+    { id: 2, name: 'تصميم وبرمجة الموقع والتطبيق', cost: 150000 },
+    { id: 3, name: 'شراء وتجهيز كونتنر X2 Trip (نموذج أولي)', cost: 350000 },
+    { id: 4, name: 'أجهزة كمبيوتر وسيرفرات داخلية', cost: 120000 },
+    { id: 5, name: 'معدات مكتبية وأثاث وتجهيزات', cost: 80000 },
+    { id: 6, name: 'تجهيز محتوى XR/VR الأولي', cost: 200000 },
+    { id: 7, name: 'حملة تسويق الافتتاح', cost: 100000 },
   ]);
 
   const [monthlyCosts, setMonthlyCosts] = useState([
-    { id: 1, name: 'رواتب الفريق التقني والإداري', cost: 80000 },
-    { id: 2, name: 'تكاليف السيرفرات السحابية', cost: 5000 },
-    { id: 3, name: 'حملات تسويقية شهرية', cost: 30000 },
-    { id: 4, name: 'مصاريف نثرية وصيانة', cost: 10000 },
+    { id: 1, name: 'رواتب الفريق التقني والإداري', cost: 120000 },
+    { id: 2, name: 'إيجار مقرات فرعية / مخازن', cost: 15000 },
+    { id: 3, name: 'اشتراكات API (طيران، فنادق، خرائط)', cost: 25000 },
+    { id: 4, name: 'تكاليف السيرفرات السحابية (Cloud)', cost: 8000 },
+    { id: 5, name: 'حملات تسويقية شهرية', cost: 30000 },
+    { id: 6, name: 'مصاريف نثرية وصيانة دورية', cost: 10000 },
   ]);
 
   const [monthlyRevenues, setMonthlyRevenues] = useState([
-    { id: 1, name: 'عمولات حجز الطيران والفنادق', revenue: 120000 },
-    { id: 2, name: 'اشتراكات XR Premium', revenue: 50000 },
+    { id: 1, name: 'عمولات حجز الطيران والفنادق', revenue: 180000 },
+    { id: 2, name: 'تذاكر واشتراكات X2 Trip', revenue: 90000 },
     { id: 3, name: 'مبيعات المتجر الإلكتروني', revenue: 30000 },
-    { id: 4, name: 'إيرادات أخرى', revenue: 10000 },
+    { id: 4, name: 'اشتراكات التأمين الذكي (Smart Life)', revenue: 45000 },
   ]);
 
   // Calculations
@@ -69,7 +74,7 @@ const Business: React.FC = () => {
                         التكاليف التأسيسية
                         <span className="text-white text-sm bg-red-500/20 px-2 py-1 rounded">{totalStartup.toLocaleString()} ج.م</span>
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pl-2">
                         {startupCosts.map((item) => (
                             <div key={item.id}>
                                 <label className="text-xs text-gray-400 block mb-1">{item.name}</label>
@@ -90,7 +95,7 @@ const Business: React.FC = () => {
                         التكاليف التشغيلية (شهرياً)
                         <span className="text-white text-sm bg-orange-500/20 px-2 py-1 rounded">{totalMonthlyCost.toLocaleString()} ج.م</span>
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pl-2">
                         {monthlyCosts.map((item) => (
                             <div key={item.id}>
                                 <label className="text-xs text-gray-400 block mb-1">{item.name}</label>
@@ -111,7 +116,7 @@ const Business: React.FC = () => {
                         الإيرادات المتوقعة (شهرياً)
                         <span className="text-white text-sm bg-green-500/20 px-2 py-1 rounded">{totalMonthlyRevenue.toLocaleString()} ج.م</span>
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pl-2">
                         {monthlyRevenues.map((item) => (
                             <div key={item.id}>
                                 <label className="text-xs text-gray-400 block mb-1">{item.name}</label>
@@ -137,7 +142,14 @@ const Business: React.FC = () => {
                 </div>
                 <div className="h-10 w-[1px] bg-white/10 hidden md:block"></div>
                 <div className="text-center md:text-right">
-                    <div className="text-gray-400 text-sm">فترة استرداد رأس المال (تقريباً)</div>
+                    <div className="text-gray-400 text-sm">التكلفة التأسيسية الكلية</div>
+                    <div className="text-xl font-bold text-white">
+                        {totalStartup.toLocaleString()} ج.م
+                    </div>
+                </div>
+                <div className="h-10 w-[1px] bg-white/10 hidden md:block"></div>
+                <div className="text-center md:text-right">
+                    <div className="text-gray-400 text-sm">فترة استرداد رأس المال (ROI)</div>
                     <div className="text-xl font-bold text-blue-400">
                         {netProfit > 0 ? (totalStartup / netProfit).toFixed(1) + ' شهر' : '---'}
                     </div>
